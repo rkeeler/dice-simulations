@@ -1,0 +1,19 @@
+{
+  "name": "dice-simulations",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.21",
+    "@types/table": "^4.0.5",
+    "prettier": "^1.16.4",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.3.1"
+  },
+  "dependencies": {
+    "table": "^5.2.2"
+  }
+}
