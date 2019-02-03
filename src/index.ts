@@ -12,77 +12,39 @@ function main() {
       nGreaterThan(playerValues, 2, findHighest(enemyValues))
   });
 
+  const playerRanks = [
+    [dice.d4],
+    [dice.d4, dice.d4],
+    [dice.d6, dice.d4],
+    [dice.d6, dice.d6],
+    [dice.d8, dice.d6],
+    [dice.d8, dice.d8],
+    [dice.d10, dice.d8],
+    [dice.d10, dice.d10, dice.d6]
+  ];
+
+  const difficultyRanks = [
+    [dice.d4],
+    [dice.d6],
+    [dice.d8],
+    [dice.d10, dice.d4],
+    [dice.d12, dice.d6],
+    [dice.d20, dice.d8]
+  ];
+
   logTable([
-    ['↓ Player | Enemy →', '1d4', '1d6', '1d8', '1d10,1d4', '1d12,1d6', '1d20,1d8'],
-    createTableRow('1d4', [
-      simulation.run([dice.d4], [dice.d4]),
-      simulation.run([dice.d4], [dice.d6]),
-      simulation.run([dice.d4], [dice.d8]),
-      simulation.run([dice.d4], [dice.d10, dice.d4]),
-      simulation.run([dice.d4], [dice.d12, dice.d6]),
-      simulation.run([dice.d4], [dice.d20, dice.d8])
-    ]),
-    createTableRow('1d4,1d4', [
-      simulation.run([dice.d4, dice.d4], [dice.d4]),
-      simulation.run([dice.d4, dice.d4], [dice.d6]),
-      simulation.run([dice.d4, dice.d4], [dice.d8]),
-      simulation.run([dice.d4, dice.d4], [dice.d10, dice.d4]),
-      simulation.run([dice.d4, dice.d4], [dice.d12, dice.d6]),
-      simulation.run([dice.d4, dice.d4], [dice.d20, dice.d8])
-    ]),
-    createTableRow('1d6,1d4', [
-      simulation.run([dice.d6, dice.d4], [dice.d4]),
-      simulation.run([dice.d6, dice.d4], [dice.d6]),
-      simulation.run([dice.d6, dice.d4], [dice.d8]),
-      simulation.run([dice.d6, dice.d4], [dice.d10, dice.d4]),
-      simulation.run([dice.d6, dice.d4], [dice.d12, dice.d6]),
-      simulation.run([dice.d6, dice.d4], [dice.d20, dice.d8])
-    ]),
-    createTableRow('1d6,1d6', [
-      simulation.run([dice.d6, dice.d6], [dice.d4]),
-      simulation.run([dice.d6, dice.d6], [dice.d6]),
-      simulation.run([dice.d6, dice.d6], [dice.d8]),
-      simulation.run([dice.d6, dice.d6], [dice.d10, dice.d4]),
-      simulation.run([dice.d6, dice.d6], [dice.d12, dice.d6]),
-      simulation.run([dice.d6, dice.d6], [dice.d20, dice.d8])
-    ]),
-    createTableRow('1d8,1d6', [
-      simulation.run([dice.d8, dice.d6], [dice.d4]),
-      simulation.run([dice.d8, dice.d6], [dice.d6]),
-      simulation.run([dice.d8, dice.d6], [dice.d8]),
-      simulation.run([dice.d8, dice.d6], [dice.d10, dice.d4]),
-      simulation.run([dice.d8, dice.d6], [dice.d12, dice.d6]),
-      simulation.run([dice.d8, dice.d6], [dice.d20, dice.d8])
-    ]),
-    createTableRow('1d8,1d8', [
-      simulation.run([dice.d8, dice.d8], [dice.d4]),
-      simulation.run([dice.d8, dice.d8], [dice.d6]),
-      simulation.run([dice.d8, dice.d8], [dice.d8]),
-      simulation.run([dice.d8, dice.d8], [dice.d10, dice.d4]),
-      simulation.run([dice.d8, dice.d8], [dice.d12, dice.d6]),
-      simulation.run([dice.d8, dice.d8], [dice.d20, dice.d8])
-    ]),
-    createTableRow('1d10,1d8', [
-      simulation.run([dice.d10, dice.d8], [dice.d4]),
-      simulation.run([dice.d10, dice.d8], [dice.d6]),
-      simulation.run([dice.d10, dice.d8], [dice.d8]),
-      simulation.run([dice.d10, dice.d8], [dice.d10, dice.d4]),
-      simulation.run([dice.d10, dice.d8], [dice.d12, dice.d6]),
-      simulation.run([dice.d10, dice.d8], [dice.d20, dice.d8])
-    ]),
-    createTableRow('1d10,1d10,1d6', [
-      simulation.run([dice.d10, dice.d10, dice.d6], [dice.d4]),
-      simulation.run([dice.d10, dice.d10, dice.d6], [dice.d6]),
-      simulation.run([dice.d10, dice.d10, dice.d6], [dice.d8]),
-      simulation.run([dice.d10, dice.d10, dice.d6], [dice.d10, dice.d4]),
-      simulation.run([dice.d10, dice.d10, dice.d6], [dice.d12, dice.d6]),
-      simulation.run([dice.d10, dice.d10, dice.d6], [dice.d20, dice.d8])
-    ])
+    ['↓ Player | Enemy →', ...difficultyRanks.map(d => diceToString(d))],
+    ...playerRanks.map(playerRank =>
+      createTableRow(simulation, playerRank, difficultyRanks)
+    )
   ]);
 }
 
-function createTableRow(playerDiceString, results) {
-  return [playerDiceString, ...results.map(formatResults)];
+function createTableRow(simulation, playerRank, difficultyRanks) {
+  const results = difficultyRanks.map(difficultyRank =>
+    simulation.run(playerRank, difficultyRank)
+  );
+  return [diceToString(playerRank), ...results.map(formatResults)];
 }
 
 function formatResults(results) {
@@ -110,4 +72,8 @@ function nGreaterThan(values: number[], n: number, target: number) {
   }
 
   return false;
+}
+
+function diceToString(dice) {
+  return dice.map(d => d.name).join(',');
 }

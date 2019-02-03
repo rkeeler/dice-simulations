@@ -1,4 +1,5 @@
 export interface Dice {
+  name: string;
   min: number;
   max: number;
   roll: () => number;
@@ -6,6 +7,7 @@ export interface Dice {
 
 function createDice(numSides: number): Dice {
   return {
+    name: `1d${numSides}`,
     min: 1,
     max: numSides,
     roll: () => Math.floor(Math.random() * numSides) + 1
